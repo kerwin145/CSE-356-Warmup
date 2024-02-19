@@ -1,0 +1,15 @@
+.connect-grid{
+    display: grid; 
+    grid-template-columns: repeat(7, 100px);
+}
+
+.connect-cell, .connect-dropBtn{
+    column-span: 1;
+}
+
+.connect-cell{
+    border: 1px solid black;
+    height: 50px;
+    width: 50px;
+    margin: auto
+}
