@@ -5,11 +5,11 @@ const path = require('path')
 //On first connect, send form asking for name
 router.get('/', (req, res) => {
     const filePath = path.join(__dirname, '/connect_pages/form.html')
-    res.setHeader("X-CSE356", process.env.HEADER)
     res.sendFile(filePath)
 })
-//When getting name, save it as variable and server the board
-router.post('/', (req, res) => {
+
+router.post('/',  (req, res) => {
+    
     let username = req.body.name
     let boardStr = req.body.board
    
@@ -34,10 +34,11 @@ router.post('/', (req, res) => {
     let htmlForm 
     if (xWon || isTied){
         htmlForm = `
-            <form action="/connect.php" method="POST">
+            <form action="/connect.php" method="POST" enctype="multipart/form-data">
                 ${boardHtml}
                 <input type="hidden" name="name" value="${username}">
                 ${xWon ? "<h1>You won!</h1>" : isTied ? "<h1>Draw</h1>" : ``}
+                ${xWon ? "<div>You won!</div>" : isTied ? "<div>Draw</d>" : ``}
                 ${xWon || isTied ? 
                     `<button type = "submit" name="board" value = "       .       .       .       .       " >Play again</button>`
                     :
@@ -63,10 +64,11 @@ router.post('/', (req, res) => {
         }
 
         htmlForm = `
-        <form action="/connect.php" method="POST">
+        <form action="/connect.php" method="POST" enctype="multipart/form-data">
             ${boardHtml}
             <input type="hidden" name="name" value="${username}">
             ${oWon ? "<h1>I won!</h1>" : isTied ? "<h1>Draw</h1>" : ``}
+            ${oWon ? "<div>I won!</div>" : isTied ? "<h1>Draw</h1>" : ``}
             ${oWon || isTied ? 
                 `<button type = "submit" name="board" value = "       .       .       .       .       " >Play again</button>`
                 :
@@ -76,7 +78,6 @@ router.post('/', (req, res) => {
         `
     }
 
-    res.setHeader("X-CSE356", process.env.HEADER)
     res.send(`
         <html>
         <head>
@@ -84,8 +85,8 @@ router.post('/', (req, res) => {
             <link rel="stylesheet" href="/css/connect.css">
         </head>
         <body>
-            <h1>Hello ${username}</h1>
-            ${htmlForm}
+        <h1> Hello ${username}, ${new Date()}</h1>
+        ${htmlForm}
         </body>
     `)
 
@@ -105,7 +106,8 @@ function generateBoard(board, gameOver){
             let newBoardStr = newBoard.map(row => row.join(" ")).join(".")
             html += `<button class = "connect-dropBtn" type="submit" name="board" value="${newBoardStr}">v</button>`
         }else{
-            html += `<button class = "connect-dropBtn" type = "submit" name="board" value = "" disabled></button>`
+            // html += `<button class = "connect-dropBtn" type = "submit" name="board" value = "" disabled></button>`
+            html += "<div></div>"
         }
     }
 
